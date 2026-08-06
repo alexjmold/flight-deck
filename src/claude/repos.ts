@@ -4,6 +4,8 @@ import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { promisify } from 'node:util'
 
+import { demoRepos, isDemo } from '../demo.js'
+
 const run = promisify(execFile)
 
 // A row knows its repo as owner/name; opening it needs the checkout on disk, and Claude
@@ -178,6 +180,8 @@ let cached: Promise<Map<string, string>> | undefined
 // Where your checkouts are barely changes, and building the map costs a git subprocess per
 // project, so it is resolved once and kept for the life of the panel.
 export function knownRepos(env: NodeJS.ProcessEnv = process.env): Promise<Map<string, string>> {
+  if (isDemo(env)) return Promise.resolve(demoRepos())
+
   cached ??= build(env).catch(() => new Map<string, string>())
 
   return cached

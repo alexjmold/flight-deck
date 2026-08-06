@@ -1,4 +1,5 @@
 import { readConfig } from './config.js'
+import { demoSources, isDemo } from './demo.js'
 import type { Section, SourceKey } from './item.js'
 import { fetchGitHub } from './sources/github.js'
 import { fetchIssuesForPullRequests, fetchLinear } from './sources/linear.js'
@@ -9,10 +10,15 @@ export type Source = { key: SourceKey; fetch: () => Promise<Section[]> }
 // The environment wins over the stored key, so a shell that exports one — or a .env in
 // this directory — still overrides what `flightdeck linear` last wrote.
 export function linearKey(env: NodeJS.ProcessEnv = process.env): string | undefined {
+  // A demo must not reach a real account, and its rows carry their own Linear context.
+  if (isDemo(env)) return undefined
+
   return env.LINEAR_API_KEY?.trim() || readConfig(env).linearApiKey
 }
 
 export function enabledSources(env: NodeJS.ProcessEnv = process.env): Source[] {
+  if (isDemo(env)) return demoSources()
+
   const sources: Source[] = [{ key: 'github', fetch: fetchGitHub }]
 
   const apiKey = linearKey(env)

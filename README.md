@@ -200,6 +200,18 @@ Running CI spins. That's what separates it from a started Linear issue, which is
 ```sh
 npm install
 npm run dev    # run from source
-npm test       # quoting, repo matching, terminal detection, config
+npm test       # quoting, repo matching, scrolling, terminal detection, config
 npm run build  # compile to dist/, then: node dist/cli.js
 ```
+
+### Screenshots
+
+`npm run demo` runs the panel on made-up work: the same render path, but nobody's real PRs in it and no network to wait for. `npm run frame` prints a single frame of it, ready to paste somewhere like [boron.sh](https://boron.sh):
+
+```sh
+npm run --silent frame | pbcopy
+COLUMNS=40 npm run --silent frame   # the narrow layout, tabs on their own line
+npm run demo                        # then s, or L, for the other screens
+```
+
+The rows live in `src/demo.ts`, and their ages are relative, so a frame taken next month reads the same as one taken today. `FLIGHT_DECK_DEMO=1` is what turns it on, if you'd rather run it another way.

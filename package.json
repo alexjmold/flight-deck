@@ -21,6 +21,8 @@
   },
   "scripts": {
     "dev": "tsx src/cli.tsx",
+    "demo": "FLIGHT_DECK_DEMO=1 tsx src/cli.tsx",
+    "frame": "FLIGHT_DECK_DEMO=1 COLUMNS=${COLUMNS:-64} LINES=${LINES:-40} tsx src/cli.tsx --once",
     "build": "tsc -p tsconfig.build.json",
     "test": "tsx --test \"src/**/*.test.ts\"",
     "typecheck": "tsc --noEmit",
