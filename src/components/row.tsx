@@ -13,9 +13,9 @@ type Props = {
   spinnerFrame: string
 }
 
-// Cursor + space + glyph + two spaces, then the ref column.
-const REF_INDENT = 5
-const META_INDENT = 5
+// Cursor + space + glyph + two spaces. The ref column starts here, and the lines below the
+// title line up under it.
+const INDENT = 5
 
 export function Row({ item, isSelected, width, refWidth, spinnerFrame }: Props) {
   const { status, badges } = item
@@ -32,12 +32,12 @@ export function Row({ item, isSelected, width, refWidth, spinnerFrame }: Props) 
           {item.ref.padEnd(refWidth)}
         </Text>
         <Text bold={isSelected} dimColor={item.dim && !isSelected}>
-          {truncate(item.title, width - REF_INDENT - refWidth - 1)}
+          {truncate(item.title, width - INDENT - refWidth - 1)}
         </Text>
       </Box>
 
-      <Box paddingLeft={META_INDENT} paddingRight={1} justifyContent="space-between">
-        <Text dimColor>{truncate(item.subject, width - META_INDENT - rightWidth - 2)}</Text>
+      <Box paddingLeft={INDENT} paddingRight={1} justifyContent="space-between">
+        <Text dimColor>{truncate(item.subject, width - INDENT - rightWidth - 2)}</Text>
 
         <Badges badges={badges} />
       </Box>
@@ -71,10 +71,10 @@ function Detail({ detail, width }: { detail: ItemDetail; width: number }) {
   const rightWidth = detail.badges.reduce((sum, badge) => sum + badge.text.length, 0) + detail.badges.length - 1
 
   return (
-    <Box paddingLeft={META_INDENT} paddingRight={1} justifyContent="space-between">
+    <Box paddingLeft={INDENT} paddingRight={1} justifyContent="space-between">
       <Text>
         <Text color={toneColor[detail.tone]}>{detail.glyph} </Text>
-        <Text dimColor>{truncate(detail.text, width - META_INDENT - rightWidth - 4)}</Text>
+        <Text dimColor>{truncate(detail.text, width - INDENT - rightWidth - 4)}</Text>
       </Text>
 
       <Badges badges={detail.badges} />

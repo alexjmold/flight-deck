@@ -2,11 +2,13 @@ import { Box, Text, useInput } from 'ink'
 import { useEffect, useRef, useState } from 'react'
 
 import { configPath, prettyPath, updateConfig } from '../config.js'
+import { reasonFor } from '../error.js'
 import { truncate } from '../format.js'
 import { openUrl } from '../open-url.js'
-import { KEY_URL, LinearError, verifyKey } from '../sources/linear.js'
+import { KEY_URL, verifyKey } from '../sources/linear.js'
 import { colors, glyphs } from '../theme.js'
 import { useSpinner } from '../use-spinner.js'
+import { Gap } from './gap.js'
 
 // Long enough to read the name and know the key went to the right account.
 const PAUSE = 1400
@@ -30,10 +32,9 @@ function clean(input: string): string {
   return input.replace(/[\u0000-\u001f\u007f]/g, '')
 }
 
-function reasonFor(error: unknown): string {
-  if (error instanceof LinearError) return error.message.replace(/^Linear: /, '')
-
-  return error instanceof Error ? error.message : String(error)
+// The screen already says Linear at the top.
+function withoutPrefix(error: unknown): string {
+  return reasonFor(error).replace(/^Linear: /, '')
 }
 
 export function Connect({ width, onDone, onCancel }: Props) {
@@ -73,7 +74,7 @@ export function Connect({ width, onDone, onCancel }: Props) {
     } catch (failure) {
       // Editing a masked string is no way to fix a bad paste.
       setValue('')
-      setError(reasonFor(failure))
+      setError(withoutPrefix(failure))
       setPhase('input')
     }
   }
@@ -112,12 +113,12 @@ export function Connect({ width, onDone, onCancel }: Props) {
     <Box flexDirection="column" paddingLeft={2} paddingRight={1}>
       <Text bold>CONNECT LINEAR</Text>
 
-      <Text> </Text>
+      <Gap />
 
       <Text dimColor>{truncate(`Opened ${KEY_URL.replace('https://', '')}`, width - 3)}</Text>
       <Text dimColor>{truncate('Create a key there and paste it below.', width - 3)}</Text>
 
-      <Text> </Text>
+      <Gap />
 
       {phase === 'done' ? (
         <Text color={colors.success}>
@@ -142,8 +143,7 @@ export function Connect({ width, onDone, onCancel }: Props) {
 
       {error ? <Text color={colors.failure}>{truncate(error, width - 3)}</Text> : null}
 
-      {/* Same gap the settings screen leaves above the footer. */}
-      <Text> </Text>
+      <Gap />
     </Box>
   )
 }

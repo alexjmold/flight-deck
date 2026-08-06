@@ -2,13 +2,11 @@ import { chmodSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { dirname, join } from 'node:path'
 
-// Where the Linear key lives once it is no longer coming from the environment. A .env in
-// the working directory is fine for `npm run dev` in this checkout, but the installed
-// binary runs from wherever you happen to be standing, so the key needs a fixed home.
+// Where the Linear key lives once it isn't coming from the environment: the installed binary
+// runs from wherever you happen to be standing, so a .env in the working directory won't do.
 //
 // Plain text with the permissions locked down, which is what `gh` does with the token this
-// panel already borrows. Anything stronger means a keychain per platform, and there is no
-// good cross-platform answer.
+// panel already borrows. Anything stronger means a keychain per platform.
 
 export type Config = {
   linearApiKey?: string

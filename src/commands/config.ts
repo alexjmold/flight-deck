@@ -1,4 +1,5 @@
 import { configPath, prettyPath } from '../config.js'
+import { reasonFor } from '../error.js'
 import {
   BUSY_REFRESH,
   DEFAULT_REFRESH,
@@ -14,10 +15,6 @@ const USAGE = `Usage:
   flightdeck config stale <value>   hide work untouched for longer than this
                                     (4w, 10d, 48h, or off)
   flightdeck config refresh <secs>  how often to refetch, in whole seconds`
-
-function reasonFor(error: unknown): string {
-  return error instanceof Error ? error.message : String(error)
-}
 
 function list(): number {
   const settings = readSettings()

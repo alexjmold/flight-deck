@@ -208,11 +208,13 @@ export async function fetchIssuesForPullRequests(apiKey: string, urls: string[])
   for (const issue of data?.issues?.nodes ?? []) {
     if (!issue.identifier || !issue.url) continue
 
+    const status = issue.state?.type === 'started' ? STARTED : TODO
+
     const entry: IssueLink = {
       link: { url: issue.url, ref: issue.identifier },
       detail: {
-        glyph: issue.state?.type === 'started' ? STARTED.glyph : TODO.glyph,
-        tone: issue.state?.type === 'started' ? STARTED.tone : TODO.tone,
+        glyph: status.glyph,
+        tone: status.tone,
         text: `${issue.identifier} ${issue.state?.name ?? ''}`.trim(),
         badges: priorityBadge(issue.priority),
       },

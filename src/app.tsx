@@ -1,9 +1,10 @@
 import { Box, Text, useApp, useInput } from 'ink'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 
 import { launch, type Suspend } from './claude/launch.js'
 import { Connect } from './components/connect.js'
 import { Footer } from './components/footer.js'
+import { Gap } from './components/gap.js'
 import { Header, tabsFitInline } from './components/header.js'
 import { Loading } from './components/loading.js'
 import { Row } from './components/row.js'
@@ -12,12 +13,19 @@ import { SettingsScreen } from './components/settings.js'
 import { truncate } from './format.js'
 import { urlFor, type Item, type Section, type SourceKey } from './item.js'
 import { openUrl } from './open-url.js'
+import { scrollOffset } from './scroll.js'
 import { useFeed } from './use-feed.js'
 import { useRepos } from './use-repos.js'
 import { useSpinner } from './use-spinner.js'
 import { useTerminalSize } from './use-terminal-size.js'
 
-type Entry = { kind: 'header'; key: string; label: string; count: number } | { kind: 'item'; key: string; item: Item }
+type HeaderEntry = { kind: 'header'; key: string; label: string; count: number }
+type ItemEntry = { kind: 'item'; key: string; item: Item }
+type Entry = HeaderEntry | ItemEntry
+
+function isItem(entry: Entry): entry is ItemEntry {
+  return entry.kind === 'item'
+}
 
 // Title + rule (2) + gap (1), plus a spare line: a frame that exactly fills the terminal
 // scrolls it, which strands the previous frame's top row above. The tab row and the
@@ -89,21 +97,20 @@ export function App({ interactive = true, onReady, suspend }: AppProps) {
   // land on is how anyone finds out the panel does Linear at all.
   const invite = view.key === 'linear' && !hasLinear
 
-  const filter = view.sources
+  const shown = useMemo(() => {
+    const sources = view.sources
 
-  const shown = useMemo(
-    () => (filter ? sections.filter((section) => filter.includes(section.source)) : sections),
-    [sections, filter],
-  )
+    return sources ? sections.filter((section) => sources.includes(section.source)) : sections
+  }, [sections, view.sources])
 
   const entries = useMemo(() => buildEntries(shown), [shown])
-  const selectable = useMemo(() => entries.filter((entry) => entry.kind === 'item'), [entries])
+  const selectable = useMemo(() => entries.filter(isItem), [entries])
   const refWidth = useMemo(() => refWidthFor(shown), [shown])
 
   const found = selectable.findIndex((entry) => entry.key === selectedId)
   const selectedIndex = found === -1 ? 0 : found
   const selected = selectable[selectedIndex]
-  const selectedItem = selected?.kind === 'item' ? selected.item : undefined
+  const selectedItem = selected?.item
 
   // Only rows whose repo is checked out somewhere we know about can be opened.
   const work = selectedItem?.work
@@ -132,27 +139,7 @@ export function App({ interactive = true, onReady, suspend }: AppProps) {
 
     if (target === -1) return
 
-    setOffset((prev) => {
-      let next = Math.min(prev, target)
-      let height = 0
-
-      for (let i = next; i <= target; i++) height += heightOf(entries[i]!)
-
-      while (height > budget && next < target) {
-        height -= heightOf(entries[next]!)
-        next++
-      }
-
-      // Then reclaim any room left above. Without this, a selection that resets to the top
-      // of a shorter list — switching tabs while scrolled — strands the section header off
-      // screen with empty space below it.
-      while (next > 0 && height + heightOf(entries[next - 1]!) <= budget) {
-        next--
-        height += heightOf(entries[next]!)
-      }
-
-      return next
-    })
+    setOffset((prev) => scrollOffset(entries.map(heightOf), target, budget, prev))
   }, [entries, selected?.key, budget])
 
   useEffect(() => {
@@ -222,70 +209,61 @@ export function App({ interactive = true, onReady, suspend }: AppProps) {
     used += height
   }
 
+  let body: ReactNode
+
+  if (settingsOpen) {
+    body = (
+      <SettingsScreen
+        width={width}
+        onDone={() => {
+          setSettingsOpen(false)
+          refresh()
+        }}
+      />
+    )
+  } else if (connecting) {
+    body = (
+      <Connect
+        width={width}
+        onDone={() => {
+          setConnecting(false)
+          refresh()
+        }}
+        onCancel={() => setConnecting(false)}
+      />
+    )
+  } else if (invite) {
+    body = <Invite width={width} />
+  } else if (isFirstLoad) {
+    body = <Loading />
+  } else if (!entries.length) {
+    body = <Empty allFailed={allFailed} hidden={hidden} width={width} />
+  } else {
+    body = visible.map((entry) => (
+      <Box key={entry.key} flexDirection="column">
+        {entry.kind === 'header' ? (
+          <SectionHeader label={entry.label} count={entry.count} />
+        ) : (
+          <Row
+            item={entry.item}
+            isSelected={entry.key === selected?.key}
+            width={width}
+            refWidth={refWidth}
+            spinnerFrame={spinnerFrame}
+          />
+        )}
+
+        <Gap />
+      </Box>
+    ))
+  }
+
   return (
     <Box flexDirection="column" width={width}>
       <Header width={width} lastUpdated={lastUpdated} isRefreshing={isRefreshing} tabs={VIEWS} activeTab={view.key} />
 
       <Box flexDirection="column" marginTop={1}>
-        {settingsOpen ? (
-          <SettingsScreen
-            width={width}
-            onDone={() => {
-              setSettingsOpen(false)
-              refresh()
-            }}
-          />
-        ) : connecting ? (
-          <Connect
-            width={width}
-            onDone={() => {
-              setConnecting(false)
-              refresh()
-            }}
-            onCancel={() => setConnecting(false)}
-          />
-        ) : invite ? (
-          <Box flexDirection="column" paddingLeft={2}>
-            <Text dimColor>Linear isn't connected.</Text>
-            <Text> </Text>
-            <Text dimColor>{truncate('Press ⏎ to add a key. The issues', width - 3)}</Text>
-            <Text dimColor>{truncate('assigned to you appear here.', width - 3)}</Text>
-          </Box>
-        ) : isFirstLoad ? (
-          <Loading />
-        ) : entries.length === 0 ? (
-          <Box flexDirection="column" paddingLeft={2}>
-            {/* The footer carries the reason, so this line only has to say which case it is. */}
-            <Text dimColor>{allFailed ? 'Could not load.' : 'Nothing in flight.'}</Text>
-
-            {/* An empty panel with a stale filter behind it otherwise looks broken. */}
-            {!allFailed && hidden ? (
-              <Text dimColor>{truncate(`${hidden} hidden as stale — press s to change.`, width - 3)}</Text>
-            ) : null}
-
-            <Text> </Text>
-          </Box>
-        ) : (
-          visible.map((entry) =>
-            entry.kind === 'header' ? (
-              <Box key={entry.key} flexDirection="column">
-                <SectionHeader label={entry.label} count={entry.count} />
-                <Text> </Text>
-              </Box>
-            ) : (
-              <Box key={entry.key} flexDirection="column">
-                <Row
-                  item={entry.item}
-                  isSelected={entry.key === selected?.key}
-                  width={width}
-                  refWidth={refWidth}
-                  spinnerFrame={spinnerFrame}
-                />
-                <Text> </Text>
-              </Box>
-            ),
-          )
-        )}
+        {body}
       </Box>
 
       <Footer errors={errors} hints={hints} width={width} />
@@ -293,15 +271,39 @@ export function App({ interactive = true, onReady, suspend }: AppProps) {
   )
 }
 
-// A second line only exists once there is something to put on it, and the open keys are
-// only advertised when the selected row actually has somewhere to go.
+function Invite({ width }: { width: number }) {
+  return (
+    <Box flexDirection="column" paddingLeft={2}>
+      <Text dimColor>Linear isn't connected.</Text>
+      <Gap />
+      <Text dimColor>{truncate('Press ⏎ to add a key. The issues', width - 3)}</Text>
+      <Text dimColor>{truncate('assigned to you appear here.', width - 3)}</Text>
+    </Box>
+  )
+}
+
+function Empty({ allFailed, hidden, width }: { allFailed: boolean; hidden: number; width: number }) {
+  return (
+    <Box flexDirection="column" paddingLeft={2}>
+      {/* The footer carries the reason, so this line only has to say which case it is. */}
+      <Text dimColor>{allFailed ? 'Could not load.' : 'Nothing in flight.'}</Text>
+
+      {/* An empty panel with a stale filter behind it otherwise looks broken. */}
+      {!allFailed && hidden ? (
+        <Text dimColor>{truncate(`${hidden} hidden as stale — press s to change.`, width - 3)}</Text>
+      ) : null}
+
+      <Gap />
+    </Box>
+  )
+}
+
+// Two lines, the second listing only the keys the selected row can actually use.
 function hintsFor(hasLinear: boolean, item: Item | undefined, canLaunch: boolean, invite: boolean): string[] {
   // Nothing to move through and nothing to open on an empty Linear tab.
   if (invite) return ['⏎ connect  ←→ view  q quit']
 
-  const hints = ['↑↓ move ⏎ open r refresh q quit']
-
-  const extras: string[] = ['←→ view', 's settings']
+  const extras = ['←→ view', 's settings']
 
   if (!hasLinear) extras.push('L connect linear')
 
@@ -310,5 +312,5 @@ function hintsFor(hasLinear: boolean, item: Item | undefined, canLaunch: boolean
 
   if (canLaunch) extras.push('c claude')
 
-  return extras.length ? [...hints, extras.join('  ')] : hints
+  return ['↑↓ move ⏎ open r refresh q quit', extras.join('  ')]
 }

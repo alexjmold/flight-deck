@@ -1,4 +1,5 @@
 import { configPath, prettyPath, readConfig, updateConfig } from '../config.js'
+import { reasonFor } from '../error.js'
 import { KEY_URL, verifyKey } from '../sources/linear.js'
 
 const USAGE = `Usage:
@@ -15,10 +16,6 @@ async function readStdin(): Promise<string> {
   for await (const chunk of process.stdin) chunks.push(chunk as Buffer)
 
   return Buffer.concat(chunks).toString('utf8')
-}
-
-function reasonFor(error: unknown): string {
-  return error instanceof Error ? error.message : String(error)
 }
 
 async function status(): Promise<number> {

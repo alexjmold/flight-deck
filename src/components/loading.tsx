@@ -2,6 +2,7 @@ import { Box, Text } from 'ink'
 
 import { colors } from '../theme.js'
 import { useSpinner } from '../use-spinner.js'
+import { Gap } from './gap.js'
 
 export function Loading() {
   const frame = useSpinner(true)
@@ -13,8 +14,7 @@ export function Loading() {
         <Text dimColor> Fetching pull requests…</Text>
       </Box>
 
-      {/* Same gap the rows and the other screens leave above the footer. */}
-      <Text> </Text>
+      <Gap />
     </Box>
   )
 }

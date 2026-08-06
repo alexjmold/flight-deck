@@ -1,6 +1,7 @@
 import { Box, Text, useInput } from 'ink'
 import { useState } from 'react'
 
+import { reasonFor } from '../error.js'
 import { truncate } from '../format.js'
 import {
   BUSY_REFRESH,
@@ -12,6 +13,7 @@ import {
   type Settings,
 } from '../settings.js'
 import { colors, glyphs } from '../theme.js'
+import { Gap } from './gap.js'
 
 // The arrows step through these. Anything else — 10d, 45s — is still valid, set from
 // `flightdeck config`, and shown as it is until an arrow moves off it.
@@ -29,13 +31,10 @@ type Props = {
 }
 
 function nearest(steps: number[], current: number): number {
-  let best = 0
-
-  steps.forEach((step, index) => {
-    if (Math.abs(step - current) < Math.abs(steps[best]! - current)) best = index
-  })
-
-  return best
+  return steps.reduce(
+    (best, step, index) => (Math.abs(step - current) < Math.abs(steps[best]! - current) ? index : best),
+    0,
+  )
 }
 
 function nearestStale(current: number | null): number {
@@ -67,7 +66,7 @@ export function SettingsScreen({ width, onDone }: Props) {
       setSettings(readSettings())
       setError(null)
     } catch (failure) {
-      setError(failure instanceof Error ? failure.message : String(failure))
+      setError(reasonFor(failure))
     }
   }
 
@@ -93,7 +92,7 @@ export function SettingsScreen({ width, onDone }: Props) {
         <Text bold>SETTINGS</Text>
       </Box>
 
-      <Text> </Text>
+      <Gap />
 
       <Field
         name="stale"
@@ -103,7 +102,7 @@ export function SettingsScreen({ width, onDone }: Props) {
         width={width}
       />
 
-      <Text> </Text>
+      <Gap />
 
       <Field
         name="refresh"
@@ -127,8 +126,7 @@ export function SettingsScreen({ width, onDone }: Props) {
         </Box>
       ) : null}
 
-      {/* The panel's rows all end on a blank line; the footer shouldn't butt up here either. */}
-      <Text> </Text>
+      <Gap />
     </Box>
   )
 }

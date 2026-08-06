@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
+import { reasonFor } from './error.js'
 import { enabledSources, filterStale, linearKey, linkPullRequests, type Source } from './feed.js'
 import type { Section } from './item.js'
 import { readSettings } from './settings.js'
@@ -149,5 +150,5 @@ function messageFor(reason: unknown): string {
   // A revoked or mistyped key is the one failure with a key to press.
   if (reason instanceof LinearError && reason.auth) return `${reason.message} — press L to reconnect`
 
-  return reason instanceof Error ? reason.message : String(reason)
+  return reasonFor(reason)
 }

@@ -46,6 +46,9 @@ export function urlFor(item: Item, source: SourceKey): string | undefined {
   return item.source === source ? item.url : item.link?.url
 }
 
+// ISO timestamps sort correctly as plain strings, and an item with none sorts last.
 export function byRecency(a: Item, b: Item): number {
-  return b.updatedAt.localeCompare(a.updatedAt)
+  if (a.updatedAt === b.updatedAt) return 0
+
+  return a.updatedAt > b.updatedAt ? -1 : 1
 }

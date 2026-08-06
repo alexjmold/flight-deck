@@ -1,12 +1,12 @@
 import { appleScriptQuote, shellQuote } from './quote.js'
 
 // Opening a window means knowing which terminal you are in. macOS has no registered default
-// terminal the way Linux has x-terminal-emulator, but it does not need one: the panel is
-// already running inside the terminal you chose, and the emulator says so on the way in.
+// the way Linux has x-terminal-emulator, and needs none: the emulator the panel is already
+// running inside announces itself on the way in.
 //
-// Terminals that cannot run a command in a new window — Warp, VS Code's integrated terminal,
-// anything unrecognised, anything over SSH — return null, and the caller suspends the panel
-// instead. That path is what makes the feature work everywhere, not a consolation prize.
+// Anything that can't run a command in a new window — Warp, VS Code, SSH, anything
+// unrecognised — returns null, and the caller suspends the panel instead. That path is what
+// makes the feature work everywhere, not a consolation prize.
 
 export type Spawn = { command: string; args: string[] }
 

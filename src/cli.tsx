@@ -17,12 +17,12 @@ try {
 
 const [command, ...args] = process.argv.slice(2)
 
-// --once prints a single frame and exits, for scripting or a quick look.
 if (command === 'linear') {
   process.exit(await runLinear(args))
 } else if (command === 'config') {
   process.exit(runConfig(args))
 } else if (process.argv.includes('--once')) {
+  // A single frame, for scripting or a quick look: render, wait for the first fetch, unmount.
   let unmount = () => {}
   let done = false
 

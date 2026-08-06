@@ -6,15 +6,12 @@ import { promisify } from 'node:util'
 
 const run = promisify(execFile)
 
-// A row knows its repo as owner/name; to open anything there we need the checkout on disk.
-// Claude Code already records every directory you have worked in, so the map comes from its
-// own history rather than from configuration.
+// A row knows its repo as owner/name; opening it needs the checkout on disk, and Claude
+// Code's history already records every directory you have worked in.
 //
-// The directory names under projects/ are slugified paths and cannot be reversed: they are
-// lossy (every separator becomes a dash) and go stale when a directory is renamed. The cwd
-// recorded inside the transcript is the only trustworthy path, and the git remote is the
-// only trustworthy way back to owner/name — repo directories are routinely named something
-// else entirely.
+// The directory names under projects/ can't be used for this: they are slugified paths,
+// lossy and stale the moment a directory is renamed. Only the cwd inside the transcript is
+// a trustworthy path, and only the git remote leads back to owner/name.
 
 // Transcripts reach several megabytes, so never read one whole. Any record carries the same
 // cwd, and the tail is both cheap to reach and the most likely to be current.
