@@ -1,0 +1,41 @@
+{
+  "name": "flight-deck",
+  "version": "0.1.0",
+  "description": "A terminal panel showing the work you have in flight",
+  "license": "MIT",
+  "author": "Alexander Mold",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexjmold/flight-deck.git"
+  },
+  "homepage": "https://github.com/alexjmold/flight-deck#readme",
+  "type": "module",
+  "bin": {
+    "flightdeck": "dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "tsx src/cli.tsx",
+    "build": "tsc -p tsconfig.build.json",
+    "test": "tsx --test \"src/**/*.test.ts\"",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "lint": "prettier --check ."
+  },
+  "dependencies": {
+    "ink": "^7.1.1",
+    "react": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.1",
+    "@types/react": "^19.2.0",
+    "prettier": "^3.9.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}
