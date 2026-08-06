@@ -3,6 +3,7 @@ import { render, type Instance } from 'ink'
 
 import { App } from './app.js'
 import type { Suspend } from './claude/launch.js'
+import { runConfig } from './commands/config.js'
 import { runLinear } from './commands/linear.js'
 import { CLEAR_SCREEN, ENTER_ALT_SCREEN, LEAVE_ALT_SCREEN } from './screen.js'
 
@@ -19,6 +20,8 @@ const [command, ...args] = process.argv.slice(2)
 // --once prints a single frame and exits, for scripting or a quick look.
 if (command === 'linear') {
   process.exit(await runLinear(args))
+} else if (command === 'config') {
+  process.exit(runConfig(args))
 } else if (process.argv.includes('--once')) {
   let unmount = () => {}
   let done = false

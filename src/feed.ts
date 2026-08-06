@@ -22,6 +22,35 @@ export function enabledSources(env: NodeJS.ProcessEnv = process.env): Source[] {
   return sources
 }
 
+export type Filtered = { sections: Section[]; hidden: number }
+
+// Drops work nothing has happened to in a while, by last activity rather than by age —
+// a PR opened months ago but touched this morning is not stale. An item with no
+// timestamp can't be judged, so it stays.
+export function filterStale(sections: Section[], staleMs: number | null, now = Date.now()): Filtered {
+  if (staleMs === null) return { sections, hidden: 0 }
+
+  const cutoff = now - staleMs
+  let hidden = 0
+
+  const kept = sections.map((section) => ({
+    ...section,
+    items: section.items.filter((item) => {
+      if (!item.updatedAt) return true
+
+      const fresh = new Date(item.updatedAt).getTime()
+
+      if (Number.isNaN(fresh) || fresh >= cutoff) return true
+
+      hidden++
+
+      return false
+    }),
+  }))
+
+  return { sections: kept, hidden }
+}
+
 // Hangs each PR's Linear issue off its row: the issue to jump to with `l`, plus the state
 // and priority to show beneath. Returns the sections untouched if nothing links up.
 export async function linkPullRequests(sections: Section[], apiKey: string): Promise<Section[]> {

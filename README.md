@@ -1,6 +1,6 @@
 # Flight Deck
 
-A narrow terminal panel showing the work you have in flight: your open GitHub PRs (drafts included) with CI state, PRs waiting on your review, and — if you use Linear — the issues assigned to you. Refreshes every 30 seconds.
+A narrow terminal panel showing the work you have in flight: your open GitHub PRs (drafts included) with CI state, PRs waiting on your review, and — if you use Linear — the issues assigned to you. Refreshes every 30 seconds, and hides anything nothing has happened to in four weeks — both adjustable.
 
 ```
   IN FLIGHT  [ALL] GITHUB  LINEAR     10:28 ⟳
@@ -20,7 +20,7 @@ A narrow terminal panel showing the work you have in flight: your open GitHub PR
      workflows · @snorrees                 1w
 
   ↑↓ move ⏎ open r refresh q quit
-  ←→ view  c claude
+  ←→ view  s settings  c claude
 ```
 
 ## Install
@@ -43,16 +43,61 @@ Needs Node 20+ and the [`gh` CLI](https://cli.github.com), authenticated (`gh au
 | `l`               | Open the Linear side of the row     |
 | `L`               | Connect Linear, or replace the key  |
 | `c`               | Work on it in Claude Code           |
+| `s`               | Settings                            |
 | `r`               | Refresh now                         |
 | `q`               | Quit                                |
 
 The panel runs on the terminal's alternate screen, so quitting restores whatever was there before, and the layout follows the window as you resize it. `flightdeck --once` prints a single frame and exits, for scripting or a quick look. `COLUMNS` pins the panel to a fixed width.
 
+## Settings
+
+`s` opens them in the panel. `↑` `↓` pick one, `←` `→` change it, and each change is saved as you make it:
+
+```
+  SETTINGS
+
+❯ stale     4w
+    Hide work untouched for longer.
+
+  refresh   30s
+    How often the panel refetches.
+
+  ↑↓ move  ←→ change  esc done
+```
+
+| Setting   | Default | What it does                                                                       |
+| --------- | ------- | ---------------------------------------------------------------------------------- |
+| `stale`   | `4w`    | Hides PRs and issues nothing has happened to in this long. `off` shows everything. |
+| `refresh` | `30s`   | How often the panel refetches.                                                     |
+
+Stale counts from the last activity, not from when the work was opened — a PR from March you rebased this morning stays. Anything it hides is counted on the empty panel, so a filter that hides everything doesn't look like a broken one.
+
+The arrows step through sensible values; anything else goes in from a script or a dotfile, alongside the Linear key in the same `config.json`:
+
+```sh
+flightdeck config              # show both, and where they live
+flightdeck config stale 10d    # 4w, 10d, 48h … or off
+flightdeck config refresh 60   # whole seconds
+```
+
+Both places warn below 10 seconds: GitHub and Linear will rate limit you, and the panel is only as useful as the API it can still reach.
+
 ## Linear
 
 Optional, and the panel asks for it rather than expecting you to have read this: the `LINEAR` tab is there from the start, and arriving on it offers to connect. `⏎` takes it up, and `L` does the same from anywhere.
 
-That opens [linear.app/settings/api](https://linear.app/settings/api), takes the key you paste back, and checks it with Linear before saving — a key that doesn't work says so while you still have the tab open, and one that works says whose it is. `ISSUES` appears on the next refresh:
+```
+  CONNECT LINEAR
+
+  Opened linear.app/settings/api
+  Create a key there and paste it below.
+
+  key ▏
+
+  ⏎ connect  esc cancel
+```
+
+The page it opens is [linear.app/settings/api](https://linear.app/settings/api), and the key you paste back is checked with Linear before it's saved — one that doesn't work says so while you still have the screen open, and one that works says whose it is. `ISSUES` appears on the next refresh:
 
 ```
   ISSUES                                    4

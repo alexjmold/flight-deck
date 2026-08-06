@@ -7,9 +7,14 @@ export function Loading() {
   const frame = useSpinner(true)
 
   return (
-    <Box paddingLeft={2}>
-      <Text color={colors.accent}>{frame}</Text>
-      <Text dimColor> Fetching pull requests…</Text>
+    <Box flexDirection="column">
+      <Box paddingLeft={2}>
+        <Text color={colors.accent}>{frame}</Text>
+        <Text dimColor> Fetching pull requests…</Text>
+      </Box>
+
+      {/* Same gap the rows and the other screens leave above the footer. */}
+      <Text> </Text>
     </Box>
   )
 }

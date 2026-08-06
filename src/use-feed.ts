@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { enabledSources, linearKey, linkPullRequests, type Source } from './feed.js'
+import { enabledSources, filterStale, linearKey, linkPullRequests, type Source } from './feed.js'
 import type { Section } from './item.js'
+import { readSettings } from './settings.js'
 import { LinearError } from './sources/linear.js'
-
-const POLL_INTERVAL = 30_000
 
 export type Feed = {
   sections: Section[]
@@ -15,6 +14,8 @@ export type Feed = {
   allFailed: boolean
   // With one source there is nothing to switch between, so the view chrome stays hidden.
   hasLinear: boolean
+  // Dropped by the stale filter. An empty panel needs to say so rather than look broken.
+  hidden: number
   refresh: () => void
 }
 
@@ -26,6 +27,8 @@ export function useFeed(): Feed {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
   const [isFetching, setIsFetching] = useState(true)
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const [hidden, setHidden] = useState(0)
+  const [pollInterval, setPollInterval] = useState(() => readSettings().refreshSeconds * 1000)
 
   const inFlight = useRef(false)
 
@@ -36,11 +39,13 @@ export function useFeed(): Feed {
     setIsFetching(true)
     setIsRefreshing(manual)
 
-    // Read afresh each time, so connecting Linear from inside the panel takes effect on
-    // the next fetch rather than the next launch.
+    // Read afresh each time, so connecting Linear or changing a setting from inside the
+    // panel takes effect on the next fetch rather than the next launch.
     const active = enabledSources()
+    const settings = readSettings()
 
     setSources(active)
+    setPollInterval(settings.refreshSeconds * 1000)
 
     const results = await Promise.allSettled(active.map((source) => source.fetch()))
 
@@ -61,6 +66,22 @@ export function useFeed(): Feed {
         // Leave the PR rows as they are.
       }
     }
+
+    // Filtering after enrichment, so a hidden PR takes its Linear detail with it.
+    let dropped = 0
+
+    for (const key of Object.keys(fetched)) {
+      const sections = fetched[key]
+
+      if (!sections) continue
+
+      const result = filterStale(sections, settings.staleMs)
+
+      fetched[key] = result.sections
+      dropped += result.hidden
+    }
+
+    setHidden(dropped)
 
     setState((prev) => {
       const next: SourceState = {}
@@ -91,10 +112,10 @@ export function useFeed(): Feed {
   useEffect(() => {
     void load(false)
 
-    const timer = setInterval(() => void load(false), POLL_INTERVAL)
+    const timer = setInterval(() => void load(false), pollInterval)
 
     return () => clearInterval(timer)
-  }, [load])
+  }, [load, pollInterval])
 
   const entries = sources.map((source) => state[source.key])
   const sections = entries.flatMap((entry) => entry?.sections ?? []).filter((section) => section.items.length > 0)
@@ -108,6 +129,7 @@ export function useFeed(): Feed {
     errors,
     allFailed: errors.length === sources.length,
     hasLinear: sources.some((source) => source.key === 'linear'),
+    hidden,
     refresh: () => void load(true),
   }
 }

@@ -10,7 +10,12 @@ import { dirname, join } from 'node:path'
 // panel already borrows. Anything stronger means a keychain per platform, and there is no
 // good cross-platform answer.
 
-export type Config = { linearApiKey?: string }
+export type Config = {
+  linearApiKey?: string
+  // Canonical duration, or "off". settings.ts owns what these mean.
+  stale?: string
+  refreshSeconds?: number
+}
 
 const DIR_MODE = 0o700
 const FILE_MODE = 0o600
@@ -74,7 +79,11 @@ export function readConfig(env: NodeJS.ProcessEnv = process.env): Config {
 
   const key = typeof raw.linearApiKey === 'string' ? raw.linearApiKey.trim() : ''
 
-  return key ? { linearApiKey: key } : {}
+  return {
+    ...(key ? { linearApiKey: key } : {}),
+    ...(typeof raw.stale === 'string' ? { stale: raw.stale } : {}),
+    ...(typeof raw.refreshSeconds === 'number' ? { refreshSeconds: raw.refreshSeconds } : {}),
+  }
 }
 
 // Merges rather than replaces, so a hand-added setting this version knows nothing about

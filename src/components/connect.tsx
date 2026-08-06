@@ -141,6 +141,9 @@ export function Connect({ width, onDone, onCancel }: Props) {
       ) : null}
 
       {error ? <Text color={colors.failure}>{truncate(error, width - 3)}</Text> : null}
+
+      {/* Same gap the settings screen leaves above the footer. */}
+      <Text> </Text>
     </Box>
   )
 }

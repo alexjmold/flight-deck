@@ -8,6 +8,7 @@ import { Header, tabsFitInline } from './components/header.js'
 import { Loading } from './components/loading.js'
 import { Row } from './components/row.js'
 import { SectionHeader } from './components/section.js'
+import { SettingsScreen } from './components/settings.js'
 import { truncate } from './format.js'
 import { urlFor, type Item, type Section, type SourceKey } from './item.js'
 import { openUrl } from './open-url.js'
@@ -71,13 +72,14 @@ type AppProps = {
 
 export function App({ interactive = true, onReady, suspend }: AppProps) {
   const { exit } = useApp()
-  const { sections, lastUpdated, isFetching, isRefreshing, errors, allFailed, hasLinear, refresh } = useFeed()
+  const { sections, lastUpdated, isFetching, isRefreshing, errors, allFailed, hasLinear, hidden, refresh } = useFeed()
   const repos = useRepos()
 
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [offset, setOffset] = useState(0)
   const [viewIndex, setViewIndex] = useState(0)
   const [connecting, setConnecting] = useState(false)
+  const [settingsOpen, setSettingsOpen] = useState(false)
 
   const { width, rows } = useTerminalSize()
 
@@ -115,7 +117,11 @@ export function App({ interactive = true, onReady, suspend }: AppProps) {
   const isRunning = entries.some((entry) => entry.kind === 'item' && entry.item.status.animate)
   const spinnerFrame = useSpinner(isRunning)
 
-  const hints = connecting ? ['⏎ connect  esc cancel'] : hintsFor(hasLinear, selectedItem, canLaunch, invite)
+  const hints = settingsOpen
+    ? ['↑↓ move  ←→ change  esc done']
+    : connecting
+      ? ['⏎ connect  esc cancel']
+      : hintsFor(hasLinear, selectedItem, canLaunch, invite)
   const budget = Math.max(0, rows - CHROME - tabRow - errors.length - hints.length)
 
   // Only the very first fetch gets a spinner; 30s polls refresh in place.
@@ -185,9 +191,11 @@ export function App({ interactive = true, onReady, suspend }: AppProps) {
       }
 
       if (input === 'r') refresh()
+
+      if (input === 's') setSettingsOpen(true)
     },
     // The connect screen takes the keyboard while it is up, so q and j don't land in a key.
-    { isActive: interactive && !connecting },
+    { isActive: interactive && !connecting && !settingsOpen },
   )
 
   const visible: Entry[] = []
@@ -207,7 +215,15 @@ export function App({ interactive = true, onReady, suspend }: AppProps) {
       <Header width={width} lastUpdated={lastUpdated} isRefreshing={isRefreshing} tabs={VIEWS} activeTab={view.key} />
 
       <Box flexDirection="column" marginTop={1}>
-        {connecting ? (
+        {settingsOpen ? (
+          <SettingsScreen
+            width={width}
+            onDone={() => {
+              setSettingsOpen(false)
+              refresh()
+            }}
+          />
+        ) : connecting ? (
           <Connect
             width={width}
             onDone={() => {
@@ -226,9 +242,16 @@ export function App({ interactive = true, onReady, suspend }: AppProps) {
         ) : isFirstLoad ? (
           <Loading />
         ) : entries.length === 0 ? (
-          <Box paddingLeft={2}>
+          <Box flexDirection="column" paddingLeft={2}>
             {/* The footer carries the reason, so this line only has to say which case it is. */}
             <Text dimColor>{allFailed ? 'Could not load.' : 'Nothing in flight.'}</Text>
+
+            {/* An empty panel with a stale filter behind it otherwise looks broken. */}
+            {!allFailed && hidden ? (
+              <Text dimColor>{truncate(`${hidden} hidden as stale — press s to change.`, width - 3)}</Text>
+            ) : null}
+
+            <Text> </Text>
           </Box>
         ) : (
           visible.map((entry) =>
@@ -266,7 +289,7 @@ function hintsFor(hasLinear: boolean, item: Item | undefined, canLaunch: boolean
 
   const hints = ['↑↓ move ⏎ open r refresh q quit']
 
-  const extras: string[] = ['←→ view']
+  const extras: string[] = ['←→ view', 's settings']
 
   if (!hasLinear) extras.push('L connect linear')
 
