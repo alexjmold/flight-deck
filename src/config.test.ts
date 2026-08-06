@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { test } from 'node:test'
 
-import { ConfigError, configPath, readConfig, updateConfig } from './config.js'
+import { ConfigError, configPath, readConfig, updateConfig } from './config'
 
 function scratch(): NodeJS.ProcessEnv {
   const env = { XDG_CONFIG_HOME: mkdtempSync(join(tmpdir(), 'flight-deck-')) }

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { promisify } from 'node:util'
 
-import { appleScriptQuote, shellQuote } from './quote.js'
+import { appleScriptQuote, shellQuote } from './quote'
 
 const run = promisify(execFile)
 

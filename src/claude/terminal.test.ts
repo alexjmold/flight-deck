@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { newWindowFor } from './terminal.js'
+import { newWindowFor } from './terminal'
 
 const DIR = '/Users/alex/Projects/flight-deck'
 const SCRIPT = "claude 'fix it'"

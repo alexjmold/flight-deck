@@ -1,4 +1,4 @@
-import { readConfig, updateConfig } from './config.js'
+import { readConfig, updateConfig } from './config'
 
 export class SettingsError extends Error {}
 

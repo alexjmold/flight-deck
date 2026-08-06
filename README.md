@@ -112,10 +112,13 @@ export FLIGHT_DECK_TERMINAL='wezterm cli split-pane --cwd {dir} -- zsh -lc {cmd}
 
 ```sh
 npm install
-npm run dev    # run from source
-npm test       # quoting, repo matching, scrolling, terminal detection, config
-npm run build  # compile to dist/, then: node dist/cli.js
+npm run dev       # run from source
+npm test          # quoting, repo matching, scrolling, terminal detection, config
+npm run typecheck # tsc, which no longer emits anything
+npm run build     # bundle to dist/cli.js with tsup, then: node dist/cli.js
 ```
+
+tsup bundles the entry point, so imports are extensionless and `ink` and `react` stay external.
 
 `npm run demo` runs the panel on made-up work: the same render path, no network, and nobody's real PRs in it. Add `--once` for a single frame to paste somewhere like [boron.sh](https://boron.sh):
 

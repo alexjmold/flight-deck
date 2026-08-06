@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { repoSlug } from './repos.js'
+import { repoSlug } from './repos'
 
 test('repoSlug reads every form git hands back', () => {
   assert.equal(repoSlug('git@github.com:alexjmold/giggull.git'), 'alexjmold/giggull')

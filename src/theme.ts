@@ -1,4 +1,4 @@
-import type { Tone } from './item.js'
+import type { Tone } from './item'
 
 export const colors = {
   success: 'green',

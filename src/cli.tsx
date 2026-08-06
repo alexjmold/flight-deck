@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 import { render, type Instance } from 'ink'
 
-import { App } from './app.js'
-import type { Suspend } from './claude/launch.js'
-import { runConfig } from './commands/config.js'
-import { runLinear } from './commands/linear.js'
-import { CLEAR_SCREEN, ENTER_ALT_SCREEN, LEAVE_ALT_SCREEN } from './screen.js'
+import { App } from './app'
+import type { Suspend } from './claude/launch'
+import { runConfig } from './commands/config'
+import { runLinear } from './commands/linear'
+import { CLEAR_SCREEN, ENTER_ALT_SCREEN, LEAVE_ALT_SCREEN } from './screen'
 
 // A .env in the working directory is a convenience, not a requirement — real env vars
 // still win, and having no file at all is the normal case.

@@ -1,8 +1,8 @@
 import { Box, Text } from 'ink'
 
-import { colors } from '../theme.js'
-import { useSpinner } from '../use-spinner.js'
-import { Gap } from './gap.js'
+import { colors } from '../theme'
+import { useSpinner } from '../use-spinner'
+import { Gap } from './gap'
 
 export function Loading() {
   const frame = useSpinner(true)

@@ -1,7 +1,7 @@
 import { Box, Text } from 'ink'
 
-import { truncate } from '../format.js'
-import { colors } from '../theme.js'
+import { truncate } from '../format'
+import { colors } from '../theme'
 
 type Props = {
   errors: string[]

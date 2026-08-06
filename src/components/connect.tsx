@@ -1,14 +1,14 @@
 import { Box, Text, useInput } from 'ink'
 import { useEffect, useRef, useState } from 'react'
 
-import { configPath, prettyPath, updateConfig } from '../config.js'
-import { reasonFor } from '../error.js'
-import { truncate } from '../format.js'
-import { openUrl } from '../open-url.js'
-import { KEY_URL, verifyKey } from '../sources/linear.js'
-import { colors, glyphs } from '../theme.js'
-import { useSpinner } from '../use-spinner.js'
-import { Gap } from './gap.js'
+import { configPath, prettyPath, updateConfig } from '../config'
+import { reasonFor } from '../error'
+import { truncate } from '../format'
+import { openUrl } from '../open-url'
+import { KEY_URL, verifyKey } from '../sources/linear'
+import { colors, glyphs } from '../theme'
+import { useSpinner } from '../use-spinner'
+import { Gap } from './gap'
 
 // Long enough to read the name and know the key went to the right account.
 const PAUSE = 1400

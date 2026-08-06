@@ -1,7 +1,7 @@
-import type { Source } from './feed.js'
-import { relativeTime } from './format.js'
-import type { Badge, Detail, Item, Link, Section, SourceKey, Status } from './item.js'
-import { glyphs } from './theme.js'
+import type { Source } from './feed'
+import { relativeTime } from './format'
+import type { Badge, Detail, Item, Link, Section, SourceKey, Status } from './item'
+import { glyphs } from './theme'
 
 // Made-up work for screenshots. FLIGHT_DECK_DEMO=1 renders the panel from these instead of
 // reaching for gh or Linear, so a frame can be captured without anyone's real work in it —

@@ -1,7 +1,7 @@
 import { useStdout } from 'ink'
 import { useEffect, useState } from 'react'
 
-import { CLEAR_SCREEN } from './screen.js'
+import { CLEAR_SCREEN } from './screen'
 
 export type TerminalSize = {
   width: number

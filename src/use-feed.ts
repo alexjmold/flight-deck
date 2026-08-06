@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { reasonFor } from './error.js'
-import { enabledSources, filterStale, linearKey, linkPullRequests, type Source } from './feed.js'
-import type { Section } from './item.js'
-import { readSettings } from './settings.js'
-import { LinearError } from './sources/linear.js'
+import { reasonFor } from './error'
+import { enabledSources, filterStale, linearKey, linkPullRequests, type Source } from './feed'
+import type { Section } from './item'
+import { readSettings } from './settings'
+import { LinearError } from './sources/linear'
 
 export type Feed = {
   sections: Section[]

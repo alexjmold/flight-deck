@@ -1,8 +1,8 @@
 import { Box, Text } from 'ink'
 
-import { clock } from '../format.js'
-import { colors, glyphs } from '../theme.js'
-import { useSpinner } from '../use-spinner.js'
+import { clock } from '../format'
+import { colors, glyphs } from '../theme'
+import { useSpinner } from '../use-spinner'
 
 export type Tab = { key: string; label: string }
 

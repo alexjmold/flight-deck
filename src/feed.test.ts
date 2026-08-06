@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { filterStale } from './feed.js'
-import type { Item, Section } from './item.js'
+import { filterStale } from './feed'
+import type { Item, Section } from './item'
 
 const NOW = Date.UTC(2026, 7, 6)
 const DAY = 86_400_000

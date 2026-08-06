@@ -1,8 +1,8 @@
 import { Box, Text } from 'ink'
 
-import { truncate } from '../format.js'
-import type { Badge, Detail as ItemDetail, Item } from '../item.js'
-import { colors, glyphs, toneColor } from '../theme.js'
+import { truncate } from '../format'
+import type { Badge, Detail as ItemDetail, Item } from '../item'
+import { colors, glyphs, toneColor } from '../theme'
 
 type Props = {
   item: Item

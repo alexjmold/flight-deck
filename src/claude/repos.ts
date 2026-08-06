@@ -4,7 +4,7 @@ import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { promisify } from 'node:util'
 
-import { demoRepos, isDemo } from '../demo.js'
+import { demoRepos, isDemo } from '../demo'
 
 const run = promisify(execFile)
 

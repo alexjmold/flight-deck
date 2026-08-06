@@ -1,8 +1,8 @@
-import { readConfig } from './config.js'
-import { demoSources, isDemo } from './demo.js'
-import type { Section, SourceKey } from './item.js'
-import { fetchGitHub } from './sources/github.js'
-import { fetchIssuesForPullRequests, fetchLinear } from './sources/linear.js'
+import { readConfig } from './config'
+import { demoSources, isDemo } from './demo'
+import type { Section, SourceKey } from './item'
+import { fetchGitHub } from './sources/github'
+import { fetchIssuesForPullRequests, fetchLinear } from './sources/linear'
 
 export type Source = { key: SourceKey; fetch: () => Promise<Section[]> }
 

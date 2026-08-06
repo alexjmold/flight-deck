@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { knownRepos } from './claude/repos.js'
+import { knownRepos } from './claude/repos'
 
 // Which repos exist on this machine, as owner/name. Resolved once, because the footer has to
 // decide whether to offer `c` while it renders. Empty until it lands, which only means the

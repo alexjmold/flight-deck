@@ -1,9 +1,9 @@
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 
-import { relativeTime } from '../format.js'
-import { byRecency, type Badge, type Item, type Section, type Status } from '../item.js'
-import { glyphs } from '../theme.js'
+import { relativeTime } from '../format'
+import { byRecency, type Badge, type Item, type Section, type Status } from '../item'
+import { glyphs } from '../theme'
 
 const run = promisify(execFile)
 

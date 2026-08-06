@@ -1,9 +1,9 @@
 import { spawn } from 'node:child_process'
 
-import type { Work } from '../item.js'
-import { shellQuote } from './quote.js'
-import { knownRepos } from './repos.js'
-import { newWindowFor } from './terminal.js'
+import type { Work } from '../item'
+import { shellQuote } from './quote'
+import { knownRepos } from './repos'
+import { newWindowFor } from './terminal'
 
 // Runs the panel's own process in place of the panel, on the terminal it was using. The
 // caller unmounts the UI first and puts it back afterwards.

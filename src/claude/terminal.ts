@@ -1,4 +1,4 @@
-import { appleScriptQuote, shellQuote } from './quote.js'
+import { appleScriptQuote, shellQuote } from './quote'
 
 // Opening a window means knowing which terminal you are in. macOS has no registered default
 // the way Linux has x-terminal-emulator, and needs none: the emulator the panel is already

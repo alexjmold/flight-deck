@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { spinnerFrames } from './theme.js'
+import { spinnerFrames } from './theme'
 
 const FRAME_MS = 80
 

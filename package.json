@@ -22,7 +22,7 @@
   "scripts": {
     "dev": "tsx src/cli.tsx",
     "demo": "FLIGHT_DECK_DEMO=1 tsx src/cli.tsx",
-    "build": "tsc -p tsconfig.build.json",
+    "build": "tsup",
     "test": "tsx --test \"src/**/*.test.ts\"",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
@@ -36,6 +36,7 @@
     "@types/node": "^22.20.1",
     "@types/react": "^19.2.0",
     "prettier": "^3.9.0",
+    "tsup": "^8.5.1",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0"
   }

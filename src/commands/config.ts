@@ -1,5 +1,5 @@
-import { configPath, prettyPath } from '../config.js'
-import { reasonFor } from '../error.js'
+import { configPath, prettyPath } from '../config'
+import { reasonFor } from '../error'
 import {
   BUSY_REFRESH,
   DEFAULT_REFRESH,
@@ -8,7 +8,7 @@ import {
   readSettings,
   setRefresh,
   setStale,
-} from '../settings.js'
+} from '../settings'
 
 const USAGE = `Usage:
   flightdeck config                 show the current settings

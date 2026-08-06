@@ -1,6 +1,6 @@
-import { relativeTime } from '../format.js'
-import { byRecency, type Badge, type Detail, type Item, type Link, type Section, type Status } from '../item.js'
-import { glyphs } from '../theme.js'
+import { relativeTime } from '../format'
+import { byRecency, type Badge, type Detail, type Item, type Link, type Section, type Status } from '../item'
+import { glyphs } from '../theme'
 
 const ENDPOINT = 'https://api.linear.app/graphql'
 

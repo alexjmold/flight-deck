@@ -1,6 +1,6 @@
-import { configPath, prettyPath, readConfig, updateConfig } from '../config.js'
-import { reasonFor } from '../error.js'
-import { KEY_URL, verifyKey } from '../sources/linear.js'
+import { configPath, prettyPath, readConfig, updateConfig } from '../config'
+import { reasonFor } from '../error'
+import { KEY_URL, verifyKey } from '../sources/linear'
 
 const USAGE = `Usage:
   flightdeck linear              show whether Linear is connected

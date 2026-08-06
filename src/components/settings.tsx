@@ -1,19 +1,11 @@
 import { Box, Text, useInput } from 'ink'
 import { useState } from 'react'
 
-import { reasonFor } from '../error.js'
-import { truncate } from '../format.js'
-import {
-  BUSY_REFRESH,
-  formatRefresh,
-  parseStale,
-  readSettings,
-  setRefresh,
-  setStale,
-  type Settings,
-} from '../settings.js'
-import { colors, glyphs } from '../theme.js'
-import { Gap } from './gap.js'
+import { reasonFor } from '../error'
+import { truncate } from '../format'
+import { BUSY_REFRESH, formatRefresh, parseStale, readSettings, setRefresh, setStale, type Settings } from '../settings'
+import { colors, glyphs } from '../theme'
+import { Gap } from './gap'
 
 // The arrows step through these. Anything else — 10d, 45s — is still valid, set from
 // `flightdeck config`, and shown as it is until an arrow moves off it.

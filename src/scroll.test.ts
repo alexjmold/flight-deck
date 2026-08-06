@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { scrollOffset } from './scroll.js'
+import { scrollOffset } from './scroll'
 
 // A header (2 lines) followed by four rows (3 lines each).
 const LIST = [2, 3, 3, 3, 3]

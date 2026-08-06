@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { test } from 'node:test'
 
-import { configPath } from './config.js'
+import { configPath } from './config'
 import {
   DEFAULT_REFRESH,
   formatRefresh,
@@ -15,7 +15,7 @@ import {
   setRefresh,
   setStale,
   SettingsError,
-} from './settings.js'
+} from './settings'
 
 const WEEK = 7 * 24 * 3_600_000
 

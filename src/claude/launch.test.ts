@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { scriptFor } from './launch.js'
+import { scriptFor } from './launch'
 
 const WORK = {
   repo: 'sanity-io/workflows',
