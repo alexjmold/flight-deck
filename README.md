@@ -34,17 +34,7 @@ The panel runs on the terminal's alternate screen, so quitting restores whatever
 
 `s` opens them in the panel. `↑` `↓` pick one, `←` `→` change it, and each change is saved as you make it:
 
-```
-  SETTINGS
-
-❯ stale     4w
-    Hide work untouched for longer.
-
-  refresh   30s
-    How often the panel refetches.
-
-  ↑↓ move  ←→ change  esc done
-```
+![The settings screen: stale and refresh, each with a note under it](https://raw.githubusercontent.com/alexjmold/flight-deck/main/docs/settings-view.png)
 
 | Setting   | Default | What it does                                                                       |
 | --------- | ------- | ---------------------------------------------------------------------------------- |
