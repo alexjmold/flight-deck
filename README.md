@@ -57,16 +57,7 @@ Both places warn below 10 seconds: GitHub and Linear will rate limit you, and th
 
 Optional, and the panel asks for it rather than expecting you to have read this: the `LINEAR` tab is there from the start, and arriving on it offers to connect. `⏎` takes it up, and `L` does the same from anywhere.
 
-```
-  CONNECT LINEAR
-
-  Opened linear.app/settings/api
-  Create a key there and paste it below.
-
-  key ▏
-
-  ⏎ connect  esc cancel
-```
+![The connect screen: the key page already opened, and a masked key being pasted in](https://raw.githubusercontent.com/alexjmold/flight-deck/main/docs/linear-key-view.png)
 
 The page it opens is [linear.app/settings/api](https://linear.app/settings/api), and the key you paste back is checked with Linear before it's saved — one that doesn't work says so while you still have the screen open, and one that works says whose it is. `ISSUES` appears on the next refresh:
 
