@@ -28,8 +28,9 @@ export function tabsFitInline(width: number, tabs: Tab[]): boolean {
 }
 
 // No separator between tabs: the reserved bracket columns already leave exactly two
-// characters between one label and the next, whichever tab is active.
-function Tabs({ tabs, activeTab }: { tabs: Tab[]; activeTab: string }) {
+// characters between one label and the next, whichever tab is active. A null active tab
+// brackets none of them, and costs no width to say so.
+function Tabs({ tabs, activeTab }: { tabs: Tab[]; activeTab: string | null }) {
   return (
     <Text>
       {tabs.map((tab) =>
@@ -52,7 +53,7 @@ type Props = {
   lastUpdated: Date | null
   isRefreshing: boolean
   tabs: Tab[]
-  activeTab: string
+  activeTab: string | null
 }
 
 export function Header({ width, lastUpdated, isRefreshing, tabs, activeTab }: Props) {

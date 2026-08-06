@@ -260,7 +260,14 @@ export function App({ interactive = true, onReady, suspend }: AppProps) {
 
   return (
     <Box flexDirection="column" width={width}>
-      <Header width={width} lastUpdated={lastUpdated} isRefreshing={isRefreshing} tabs={VIEWS} activeTab={view.key} />
+      {/* Settings is not one of the views, so while it is up none of them is current. */}
+      <Header
+        width={width}
+        lastUpdated={lastUpdated}
+        isRefreshing={isRefreshing}
+        tabs={VIEWS}
+        activeTab={settingsOpen ? null : view.key}
+      />
 
       <Box flexDirection="column" marginTop={1}>
         {body}
