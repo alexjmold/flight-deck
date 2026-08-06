@@ -23,6 +23,7 @@
     "dev": "tsx src/cli.tsx",
     "demo": "FLIGHT_DECK_DEMO=1 tsx src/cli.tsx",
     "build": "tsup",
+    "prepublishOnly": "npm run typecheck && npm run test && npm run build",
     "test": "tsx --test \"src/**/*.test.ts\"",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
