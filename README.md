@@ -2,26 +2,7 @@
 
 A narrow terminal panel showing the work you have in flight: your open GitHub PRs (drafts included) with CI state, PRs waiting on your review, and — if you use Linear — the issues assigned to you. Refreshes every 30 seconds, and hides anything nothing has happened to in four weeks — both adjustable.
 
-```
-  IN FLIGHT  [ALL] GITHUB  LINEAR     10:28 ⟳
-  ───────────────────────────────────────────
-
-  YOURS                                     6
-
-❯ ✓  #387  refactor(mcp): rename fire_action…
-     sanity-io/workflows                  17h
-
-  ✗  #71   feat: implemented a basic config …
-     sanity-labs/bernoulli         ⚠ conf 24w
-
-  REVIEWS                                   2
-
-  ✓  #338  docs: improve changeset release n…
-     workflows · @snorrees                 1w
-
-  ↑↓ move ⏎ open r refresh q quit
-  ←→ view  s settings  c claude
-```
+![The panel in a terminal window: open pull requests with CI state, pull requests waiting on review, and assigned Linear issues](https://raw.githubusercontent.com/alexjmold/flight-deck/main/docs/all-view.png)
 
 ## Install
 
