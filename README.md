@@ -187,12 +187,14 @@ npm run build  # compile to dist/, then: node dist/cli.js
 
 ### Screenshots
 
-`npm run demo` runs the panel on made-up work: the same render path, but nobody's real PRs in it and no network to wait for. `npm run frame` prints a single frame of it, ready to paste somewhere like [boron.sh](https://boron.sh):
+`npm run demo` runs the panel on made-up work: the same render path, but nobody's real PRs in it and no network to wait for. Add `--once` for a single frame to copy somewhere like [boron.sh](https://boron.sh):
 
 ```sh
-npm run --silent frame | pbcopy
-COLUMNS=40 npm run --silent frame   # the narrow layout, tabs on their own line
-npm run demo                        # then s, or L, for the other screens
+npm run demo                                                  # s or L for the other screens
+COLUMNS=64 LINES=40 npm run --silent demo -- --once | pbcopy
+COLUMNS=40 LINES=40 npm run --silent demo -- --once           # tabs on their own line
 ```
+
+Piped output has no terminal to measure, so set `COLUMNS` and `LINES` yourself — the default 80×30 cuts the last rows off.
 
 The rows live in `src/demo.ts`, and their ages are relative, so a frame taken next month reads the same as one taken today. `FLIGHT_DECK_DEMO=1` is what turns it on, if you'd rather run it another way.
