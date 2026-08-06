@@ -3,10 +3,10 @@ import { reasonFor } from '../error'
 import { KEY_URL, verifyKey } from '../sources/linear'
 
 const USAGE = `Usage:
-  flightdeck linear              show whether Linear is connected
-  flightdeck linear <key>        verify a personal API key and store it
-  flightdeck linear -            read the key from stdin
-  flightdeck linear --logout     forget the stored key
+  fdeck linear              show whether Linear is connected
+  fdeck linear <key>        verify a personal API key and store it
+  fdeck linear -            read the key from stdin
+  fdeck linear --logout     forget the stored key
 
 Keys come from ${KEY_URL}.`
 
@@ -23,7 +23,7 @@ async function status(): Promise<number> {
   const key = fromEnv || readConfig().linearApiKey
 
   if (!key) {
-    console.log(`Not connected. Create a key at ${KEY_URL}, then:\n\n  flightdeck linear <key>`)
+    console.log(`Not connected. Create a key at ${KEY_URL}, then:\n\n  fdeck linear <key>`)
 
     return 0
   }

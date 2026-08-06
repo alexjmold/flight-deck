@@ -62,7 +62,7 @@ export function parseRefresh(value: string | number): number {
 }
 
 // A hand-edited setting that doesn't parse falls back to the default rather than taking
-// the panel down; `flightdeck config` is where a wrong value gets reported.
+// the panel down; `fdeck config` is where a wrong value gets reported.
 function safe<T>(read: () => T, fallback: T): T {
   try {
     return read()

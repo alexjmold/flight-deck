@@ -11,10 +11,10 @@ import {
 } from '../settings'
 
 const USAGE = `Usage:
-  flightdeck config                 show the current settings
-  flightdeck config stale <value>   hide work untouched for longer than this
-                                    (4w, 10d, 48h, or off)
-  flightdeck config refresh <secs>  how often to refetch, in whole seconds`
+  fdeck config                 show the current settings
+  fdeck config stale <value>   hide work untouched for longer than this
+                               (4w, 10d, 48h, or off)
+  fdeck config refresh <secs>  how often to refetch, in whole seconds`
 
 function list(): number {
   const settings = readSettings()

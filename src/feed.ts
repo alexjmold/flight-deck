@@ -8,7 +8,7 @@ export type Source = { key: SourceKey; fetch: () => Promise<Section[]> }
 
 // Linear is opt-in: no key means no issues, just the offer of them on its own tab.
 // The environment wins over the stored key, so a shell that exports one — or a .env in
-// this directory — still overrides what `flightdeck linear` last wrote.
+// this directory — still overrides what `fdeck linear` last wrote.
 export function linearKey(env: NodeJS.ProcessEnv = process.env): string | undefined {
   // A demo must not reach a real account, and its rows carry their own Linear context.
   if (isDemo(env)) return undefined

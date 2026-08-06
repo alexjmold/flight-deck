@@ -7,8 +7,8 @@ A narrow terminal panel for the work you have in flight: your open GitHub PRs wi
 ## Install
 
 ```sh
-npm install -g flight-deck
-flightdeck
+npm install -g @ajmmaker/flight-deck
+fdeck
 ```
 
 Needs Node 20+ and the [`gh` CLI](https://cli.github.com), signed in with `gh auth login`. Auth is reused from `gh`, so there is no GitHub token to configure. Linear is optional and set up from inside the panel.
@@ -28,7 +28,7 @@ Needs Node 20+ and the [`gh` CLI](https://cli.github.com), signed in with `gh au
 | `r`               | Refresh now                         |
 | `q`               | Quit                                |
 
-The panel runs on the terminal's alternate screen, so quitting restores whatever was there before. `flightdeck --once` prints a single frame and exits.
+The panel runs on the terminal's alternate screen, so quitting restores whatever was there before. `fdeck --once` prints a single frame and exits.
 
 ## Reading a row
 
@@ -51,10 +51,10 @@ The key is checked with Linear before it is saved, and stored `0600` in `~/.conf
 The same thing without the panel:
 
 ```sh
-flightdeck linear <key>        # verify and store
-pbpaste | flightdeck linear -  # ... without it landing in shell history
-flightdeck linear              # connected? as whom? from where?
-flightdeck linear --logout     # forget it
+fdeck linear <key>        # verify and store
+pbpaste | fdeck linear -  # ... without it landing in shell history
+fdeck linear              # connected? as whom? from where?
+fdeck linear --logout     # forget it
 ```
 
 `LINEAR_API_KEY` wins over the stored key. A personal key acts as you: `--logout` forgets it here, revoking it is done at Linear.
@@ -75,9 +75,9 @@ Stale counts from the last activity, not from when the work was opened, so a PR 
 The arrows step through sensible values. Anything else goes in from a script or a dotfile:
 
 ```sh
-flightdeck config              # show both, and where they live
-flightdeck config stale 10d    # 4w, 10d, 48h ... or off
-flightdeck config refresh 60   # whole seconds
+fdeck config              # show both, and where they live
+fdeck config stale 10d    # 4w, 10d, 48h ... or off
+fdeck config refresh 60   # whole seconds
 ```
 
 Both places warn below 10 seconds, where GitHub and Linear start rate limiting you.

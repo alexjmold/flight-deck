@@ -8,7 +8,7 @@ import { colors, glyphs } from '../theme'
 import { Gap } from './gap'
 
 // The arrows step through these. Anything else — 10d, 45s — is still valid, set from
-// `flightdeck config`, and shown as it is until an arrow moves off it.
+// `fdeck config`, and shown as it is until an arrow moves off it.
 const STALE_STEPS = ['1w', '2w', '4w', '8w', '12w', '26w', 'off']
 const REFRESH_STEPS = [5, 10, 15, 30, 60, 120, 300]
 

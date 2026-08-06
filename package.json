@@ -1,5 +1,5 @@
 {
-  "name": "flight-deck",
+  "name": "@ajmmaker/flight-deck",
   "version": "0.1.0",
   "description": "A terminal panel showing the work you have in flight",
   "license": "MIT",
@@ -11,7 +11,7 @@
   "homepage": "https://github.com/alexjmold/flight-deck#readme",
   "type": "module",
   "bin": {
-    "flightdeck": "dist/cli.js"
+    "fdeck": "dist/cli.js"
   },
   "files": [
     "dist"
