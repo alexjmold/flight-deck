@@ -1,5 +1,5 @@
 import { execFile } from 'node:child_process'
-import { open, readdir, stat } from 'node:fs/promises'
+import { open, readdir, stat, type FileHandle } from 'node:fs/promises'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { promisify } from 'node:util'
@@ -28,10 +28,14 @@ export function repoSlug(remote: string): string | undefined {
   return match?.[1] && match[2] ? `${match[1]}/${match[2]}` : undefined
 }
 
+// One unreadable transcript must not reject its way out of here: the caller resolves every
+// project at once, and a rejection there would empty the whole map.
 async function cwdOf(file: string): Promise<string | undefined> {
-  const handle = await open(file, 'r')
+  let handle: FileHandle | undefined
 
   try {
+    handle = await open(file, 'r')
+
     const { size } = await handle.stat()
     const length = Math.min(size, TAIL)
     const buffer = Buffer.alloc(length)
@@ -45,7 +49,7 @@ async function cwdOf(file: string): Promise<string | undefined> {
   } catch {
     return undefined
   } finally {
-    await handle.close()
+    await handle?.close()
   }
 }
 

@@ -52,10 +52,10 @@ const VIEWER_QUERY = `
 `
 
 // Resolves PR urls back to their issues. Not scoped to the viewer, so a PR you are only
-// reviewing still finds its issue.
+// reviewing still finds its issue. Asks for as many issues as there can be PR rows to match.
 const LINKS_QUERY = `
 query($urls: [String!]) {
-  issues(filter: { attachments: { url: { in: $urls } } }, first: 50) {
+  issues(filter: { attachments: { url: { in: $urls } } }, first: 100) {
     nodes {
       identifier
       url

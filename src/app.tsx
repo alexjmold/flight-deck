@@ -143,6 +143,14 @@ export function App({ interactive = true, onReady, suspend }: AppProps) {
         next++
       }
 
+      // Then reclaim any room left above. Without this, a selection that resets to the top
+      // of a shorter list — switching tabs while scrolled — strands the section header off
+      // screen with empty space below it.
+      while (next > 0 && height + heightOf(entries[next - 1]!) <= budget) {
+        next--
+        height += heightOf(entries[next]!)
+      }
+
       return next
     })
   }, [entries, selected?.key, budget])
@@ -153,7 +161,11 @@ export function App({ interactive = true, onReady, suspend }: AppProps) {
 
   useInput(
     (input, key) => {
-      if (input === 'q' || (key.ctrl && input === 'c')) exit()
+      // Ink handles Ctrl+C itself; the rest arrive as their bare letter, and would
+      // otherwise land on the keys below — Ctrl+L opening a browser tab, say.
+      if (key.ctrl || key.meta) return
+
+      if (input === 'q') exit()
 
       if (key.upArrow || input === 'k') setSelectedId(selectable[Math.max(0, selectedIndex - 1)]?.key ?? null)
 

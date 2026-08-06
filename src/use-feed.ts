@@ -32,13 +32,7 @@ export function useFeed(): Feed {
 
   const inFlight = useRef(false)
 
-  const load = useCallback(async (manual: boolean) => {
-    if (inFlight.current) return
-
-    inFlight.current = true
-    setIsFetching(true)
-    setIsRefreshing(manual)
-
+  const collect = useCallback(async () => {
     // Read afresh each time, so connecting Linear or changing a setting from inside the
     // panel takes effect on the next fetch rather than the next launch.
     const active = enabledSources()
@@ -103,11 +97,28 @@ export function useFeed(): Feed {
     // A timestamp on a frame where nothing loaded would be a lie — the header keeps
     // showing --:-- until something actually arrives.
     if (results.some((result) => result.status === 'fulfilled')) setLastUpdated(new Date())
-
-    inFlight.current = false
-    setIsFetching(false)
-    setIsRefreshing(false)
   }, [])
+
+  const load = useCallback(
+    async (manual: boolean) => {
+      if (inFlight.current) return
+
+      inFlight.current = true
+      setIsFetching(true)
+      setIsRefreshing(manual)
+
+      try {
+        await collect()
+      } finally {
+        // Released whatever happened: a fetch left in flight would lock out every later
+        // poll, and the refresh key with it.
+        inFlight.current = false
+        setIsFetching(false)
+        setIsRefreshing(false)
+      }
+    },
+    [collect],
+  )
 
   useEffect(() => {
     void load(false)

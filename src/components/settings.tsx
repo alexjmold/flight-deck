@@ -72,6 +72,8 @@ export function SettingsScreen({ width, onDone }: Props) {
   }
 
   useInput((input, key) => {
+    if (key.ctrl || key.meta) return
+
     if (key.escape || key.return || input === 'q') {
       onDone()
       return

@@ -27,6 +27,10 @@ export type PullRequest = {
 
 export class GitHubError extends Error {}
 
+// A hung request must not stall the poll: the panel would sit on a spinner and never
+// refresh again, since the next tick finds a fetch still in flight.
+const TIMEOUT = 15_000
+
 const PR_FIELDS = `
   ... on PullRequest {
     id
@@ -176,21 +180,32 @@ function parseNodes(nodes: RawNode[] | undefined, variant: Variant): Item[] {
     .map((pr) => toItem(pr, variant))
 }
 
-export async function fetchGitHub(): Promise<Section[]> {
+type Payload = {
+  data?: { yours?: { nodes?: RawNode[] }; requested?: { nodes?: RawNode[] }; teamRequested?: { nodes?: RawNode[] } }
+}
+
+async function query(): Promise<Payload> {
   let stdout: string
 
   try {
     const result = await run('gh', ['api', 'graphql', '-f', `query=${QUERY}`], {
       maxBuffer: 10 * 1024 * 1024,
+      timeout: TIMEOUT,
     })
     stdout = result.stdout
   } catch (error) {
     throw new GitHubError(describeFailure(error))
   }
 
-  const payload = JSON.parse(stdout) as {
-    data?: { yours?: { nodes?: RawNode[] }; requested?: { nodes?: RawNode[] }; teamRequested?: { nodes?: RawNode[] } }
+  try {
+    return JSON.parse(stdout) as Payload
+  } catch {
+    throw new GitHubError('gh returned something that is not JSON')
   }
+}
+
+export async function fetchGitHub(): Promise<Section[]> {
+  const payload = await query()
 
   const yours = parseNodes(payload.data?.yours?.nodes, 'yours').sort(byRecency)
 
@@ -211,13 +226,15 @@ export async function fetchGitHub(): Promise<Section[]> {
 }
 
 function describeFailure(error: unknown): string {
-  const err = error as { code?: string; stderr?: string; message?: string }
+  const err = error as { code?: string; killed?: boolean; stderr?: string; message?: string }
 
   if (err.code === 'ENOENT') return 'gh CLI not found — install it from cli.github.com'
+  if (err.killed) return 'gh timed out'
 
   const stderr = (err.stderr ?? '').trim()
 
   if (/auth|token|401/i.test(stderr)) return 'gh is not authenticated — run: gh auth login'
 
-  return stderr.split('\n')[0] ?? err.message ?? 'Failed to reach GitHub'
+  // A failure can leave stderr empty, and an empty line in the footer says nothing.
+  return stderr.split('\n')[0] || err.message || 'Failed to reach GitHub'
 }
