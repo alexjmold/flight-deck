@@ -168,7 +168,6 @@ function toItem(pr: PullRequest, variant: Variant): Item {
     status: CI_STATUS[pr.ci],
     badges: badgesFor(pr, variant),
     updatedAt: pr.updatedAt,
-    dim: pr.isDraft,
     work: { repo: pr.repo, prompt: promptFor(pr, variant), fromPr: pr.url },
   }
 }

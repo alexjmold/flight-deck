@@ -33,8 +33,6 @@ export type Item = {
   status: Status
   badges: Badge[]
   updatedAt: string
-  // Not yet demanding attention — a draft PR today. Renders the title dimmed.
-  dim?: boolean
   link?: Link
   detail?: Detail
   work?: Work

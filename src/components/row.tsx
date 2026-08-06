@@ -31,9 +31,7 @@ export function Row({ item, isSelected, width, refWidth, spinnerFrame }: Props) 
           {'  '}
           {item.ref.padEnd(refWidth)}
         </Text>
-        <Text bold={isSelected} dimColor={item.dim && !isSelected}>
-          {truncate(item.title, width - INDENT - refWidth - 1)}
-        </Text>
+        <Text bold={isSelected}>{truncate(item.title, width - INDENT - refWidth - 1)}</Text>
       </Box>
 
       <Box paddingLeft={INDENT} paddingRight={1} justifyContent="space-between">

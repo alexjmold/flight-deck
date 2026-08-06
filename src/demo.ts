@@ -38,7 +38,6 @@ type Row = {
   status: Status
   badges?: Badge[]
   repo?: string
-  dim?: boolean
   link?: Link
   detail?: Detail
 }
@@ -57,7 +56,6 @@ function toItem(source: SourceKey, row: Row): Item {
     status: row.status,
     badges: [...(row.badges ?? []), { text: relativeTime(updatedAt), tone: 'muted' }],
     updatedAt,
-    dim: row.dim,
     link: row.link,
     detail: row.detail,
     ...(row.repo ? { work: { repo: row.repo, prompt: `Pick up where we left off on ${row.url}.` } } : {}),
@@ -96,7 +94,6 @@ const YOURS: Row[] = [
     ago: 40 * MINUTE,
     status: RUNNING,
     badges: [DRAFT],
-    dim: true,
   },
 ]
 
